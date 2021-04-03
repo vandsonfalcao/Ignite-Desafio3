@@ -1,7 +1,7 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
-import { toast } from 'react-toastify';
-import { api } from '../services/api';
-import { Product, Stock } from '../types';
+import { createContext, ReactNode, useContext, useState } from "react";
+import { toast } from "react-toastify";
+import { api } from "../services/api";
+import { Product, Stock } from "../types";
 
 interface CartProviderProps {
   children: ReactNode;
@@ -23,26 +23,50 @@ const CartContext = createContext<CartContextData>({} as CartContextData);
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [cart, setCart] = useState<Product[]>(() => {
-    // const storagedCart = Buscar dados do localStorage
+    const storagedCart = localStorage.getItem("@RocketShoes:cart");
 
-    // if (storagedCart) {
-    //   return JSON.parse(storagedCart);
-    // }
-
+    if (storagedCart) {
+      return JSON.parse(storagedCart);
+    }
     return [];
   });
 
   const addProduct = async (productId: number) => {
     try {
-      // TODO
+      const stockProduct = await api
+        .get<Stock>(`stock/${productId}`)
+        .then((res) => res.data);
+      const product = await api
+        .get<Product>(`products/${productId}`)
+        .then((res) => res.data);
+
+      const cartItem = cart.find((prod) => prod.id === productId);
+
+      if (cartItem) {
+        if (cartItem.amount + 1 > stockProduct.amount) {
+          toast.error("Quantidade solicitada fora de estoque");
+          return;
+        }
+        const newCart = cart.map((item) =>
+          item.id === cartItem.id
+            ? { ...item, amount: cartItem.amount + 1 }
+            : item
+        );
+        setCart(newCart);
+        localStorage.setItem("@RocketShoes:cart", JSON.stringify(newCart));
+        return;
+      }
+
+      const newCart = [...cart, { ...product, amount: 1 }];
+      setCart(newCart);
+      localStorage.setItem("@RocketShoes:cart", JSON.stringify(newCart));
     } catch {
-      // TODO
+      toast.error("Erro na adição do produto");
     }
   };
 
   const removeProduct = (productId: number) => {
     try {
-      // TODO
     } catch {
       // TODO
     }
