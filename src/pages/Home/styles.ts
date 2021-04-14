@@ -7,10 +7,18 @@ export const ProductList = styled.ul`
   grid-gap: 20px;
   list-style: none;
 
+  @media screen and (max-width: 965px){
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: 655px){
+    grid-template-columns: 1fr;
+  }
+
   li {
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: var(--shape);
     border-radius: 4px;
     padding: 20px;
 
@@ -33,8 +41,8 @@ export const ProductList = styled.ul`
     }
 
     button {
-      background: #7159c1;
-      color: #fff;
+      background: var(--blue);
+      color: var(--shape);
       border: 0;
       border-radius: 4px;
       overflow: hidden;

@@ -6,7 +6,7 @@ import {
 
 import { useCart } from "../../hooks/useCart";
 import { formatPrice } from "../../util/format";
-import { Container, ProductTable, Total } from "./styles";
+import { CartMobile, Container, ProductTable, Total } from "./styles";
 
 interface Product {
   id: number;
@@ -43,6 +43,48 @@ const Cart = (): JSX.Element => {
 
   return (
     <Container>
+      <h2>Carrinho</h2>
+      <CartMobile>
+        {cart.map((product) => {
+          return (
+            <li key={product.id}>
+              <button
+                type="button"
+                data-testid="remove-product"
+                onClick={() => handleRemoveProduct(product.id)}
+              >
+                <MdDelete size={20} />
+              </button>
+              <img src={product.image} alt={product.title} />
+              <strong>{product.title}</strong>
+              <span>{formatPrice(product.price)}</span>
+              <div>
+                <button
+                  type="button"
+                  data-testid="decrement-product"
+                  disabled={product.amount <= 1}
+                  onClick={() => handleProductDecrement(product)}
+                >
+                  <MdRemoveCircleOutline size={20} />
+                </button>
+                <input
+                  type="text"
+                  data-testid="product-amount"
+                  readOnly
+                  value={product.amount}
+                />
+                <button
+                  type="button"
+                  data-testid="increment-product"
+                  onClick={() => handleProductIncrement(product)}
+                >
+                  <MdAddCircleOutline size={20} />
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </CartMobile>
       <ProductTable>
         <thead>
           <tr>

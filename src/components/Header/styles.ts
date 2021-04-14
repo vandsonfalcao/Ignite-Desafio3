@@ -7,11 +7,25 @@ export const Container = styled.header`
   align-items: center;
   margin: 50px 0;
 
+  @media screen and (max-width: 414px) {
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    margin: 3rem 0 2rem 0;
+    a:last-child {
+      align-self: flex-end;
+    }
+  }
+
   a {
     transition: opacity 0.2s;
 
     &:hover {
       opacity: 0.7;
+    }
+
+    img {
+      width: 100%;
     }
   }
 `;
@@ -31,7 +45,7 @@ export const Cart = styled(Link)`
     }
 
     span {
-      font-size: 12px;
+      font-size: 0.75rem;
       color: #999;
     }
   }
